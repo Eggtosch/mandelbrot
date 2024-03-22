@@ -73,6 +73,9 @@ int mandel_compute_double(void *ptr) {
 	mandel_int yend   = ystart + MANDEL_HEIGHT;
 
 	for (mandel_int y = ystart; y < yend; y += ncores) {
+		if (y - ystart + args->index >= MANDEL_HEIGHT) {
+			break;
+		}
 		for (mandel_int x = xstart; x < xend; x += AVX_WIDTH) {
 			avx_reg xv = VEC_INIT(x);
 			avx_reg yv = VEC_INIT(y);
@@ -128,6 +131,9 @@ int mandel_compute_quad(void *ptr) {
 	mandel_long yend   = ystart + MANDEL_HEIGHT;
 
 	for (mandel_long y = ystart; y < yend; y += ncores*2) {
+		if (y - ystart + args->index*2 >= MANDEL_HEIGHT) {
+			break;
+		}
 		for (mandel_long x = xstart; x < xend; x += 2) {
 			mandel_quad ar = 2 * wfactor * (x / width  - 0.5);
 			mandel_quad ai = 2 * hfactor * (y / height - 0.5);
